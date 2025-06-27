@@ -193,17 +193,33 @@ button, input, textarea, select {
   line-height: 1;
 }
 
+/* Estilos para el logo */
 .logo-text {
-  font-family: var(--font-heading);
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: var(--primary);
+    font-family: var(--font-heading);
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--white); /* Blanco por defecto */
+    text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.5); /* Sombra para mejor visibilidad */
+    transition: var(--transition);
 }
 
 .logo-tagline {
-  font-size: 0.875rem;
-  color: var(--text-medium);
-  margin-top: -0.25rem;
+    font-size: 0.875rem;
+    color: var(--white);
+    margin-top: -0.25rem;
+    text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3);
+    transition: var(--transition);
+}
+
+/* Cuando se hace scroll */
+.header.scrolled .logo-text {
+    color: var(--primary);
+    text-shadow: none;
+}
+
+.header.scrolled .logo-tagline {
+    color: var(--text-medium);
+    text-shadow: none;
 }
 
 .header.scrolled .logo-text {
@@ -212,6 +228,146 @@ button, input, textarea, select {
 
 .header.scrolled .logo-tagline {
   color: var(--text-medium);
+}
+
+/* Aseguramos que el logo KAROM sea visible en ambos estados del header */
+.header .logo {
+    color: #ffffff; /* Color blanco para cuando el fondo es oscuro/transparente */
+    transition: color 0.3s ease;
+    font-weight: bold; /* Para mayor visibilidad */
+    text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.5); /* Sombra para mejorar legibilidad */
+}
+
+/* Cuando el header cambia a blanco (clase .scrolled) */
+.header.scrolled .logo {
+    color: #006400; /* Verde oscuro o el color corporativo de KAROM */
+    text-shadow: none;
+}
+
+.main-nav {
+  display: none;
+}
+
+.nav-list {
+  display: flex;
+  gap: 2rem;
+}
+
+.nav-link {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--text-dark);
+  position: relative;
+  padding: 0.5rem 0;
+}
+
+.header:not(.scrolled) .nav-link {
+  color: var(--white);
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: var(--primary);
+  transition: var(--transition);
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+  width: 100%;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.menu-toggle {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 24px;
+  height: 18px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 101;
+}
+
+.menu-toggle span {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background-color: var(--primary);
+  transition: var(--transition);
+}
+
+.header:not(.scrolled) .menu-toggle span {
+  background-color: var(--white);
+}
+
+.menu-toggle.active span:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+
+.menu-toggle.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.menu-toggle.active span:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+/* Para el botón o texto de "Contáctanos" */
+.header .contact-btn {
+    color: #ffffff; /* Color blanco inicial */
+    transition: color 0.3s ease;
+}
+
+/* Cuando el header cambia a blanco */
+.header.scrolled .contact-btn {
+    color: #006400; /* Verde oscuro cuando el fondo es blanco */
+}
+
+/* Si "Contáctanos" es un botón, puedes añadir esto */
+.header .contact-btn {
+    background: rgba(0, 100, 0, 0.7); /* Fondo verde semitransparente */
+    padding: 8px 15px;
+    border-radius: 4px;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+.header.scrolled .contact-btn {
+    background: #ffffff; /* Fondo blanco */
+    color: #006400; /* Texto verde */
+    border: 1px solid #006400; /* Borde verde */
+}
+
+.header.scrolled .logo-text {
+  color: var(--primary);
+}
+
+.header.scrolled .logo-tagline {
+  color: var(--text-medium);
+}
+
+/* Aseguramos que el logo KAROM sea visible en ambos estados del header */
+.header .logo {
+    color: #ffffff; /* Color blanco para cuando el fondo es oscuro/transparente */
+    transition: color 0.3s ease;
+    font-weight: bold; /* Para mayor visibilidad */
+    text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.5); /* Sombra para mejorar legibilidad */
+}
+
+/* Cuando el header cambia a blanco (clase .scrolled) */
+.header.scrolled .logo {
+    color: #006400; /* Verde oscuro o el color corporativo de KAROM */
+    text-shadow: none;
 }
 
 .main-nav {
@@ -415,6 +571,39 @@ button, input, textarea, select {
   background-color: var(--white);
   color: var(--primary);
   transform: translateY(-2px);
+}
+
+/* Estilos para el botón Contáctanos */
+.header .btn-outline-light {
+    color: var(--white);
+    border: 1px solid var(--white);
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-sm);
+    font-weight: 500;
+    transition: var(--transition);
+    /* Añadir sombra para mejorar visibilidad */
+    text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* Cuando el header cambia a fondo blanco */
+.header.scrolled .btn-outline-light {
+    color: var(--primary);
+    border-color: var(--primary);
+    background-color: transparent;
+    text-shadow: none; /* Quitar sombra en fondo blanco */
+}
+
+/* Efecto hover para ambos estados */
+.header .btn-outline-light:hover {
+    background-color: var(--white);
+    color: var(--primary);
+    text-shadow: none;
+}
+
+.header.scrolled .btn-outline-light:hover {
+    background-color: var(--primary);
+    color: var(--white);
+    border-color: var(--primary);
 }
 
 /* Hero Section */
