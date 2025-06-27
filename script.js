@@ -76,26 +76,44 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Form submission
-    if (contactForm) {
-        contactForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Simple form validation
-            const nombre = document.getElementById('nombre').value;
-            const email = document.getElementById('email').value;
-            
-            if (!nombre || !email) {
-                alert('Por favor complete todos los campos requeridos.');
-                return;
-            }
-            
-            // Here you would normally send the form data to a server
-            // For demo purposes, we'll just show a success message
-            alert('¡Gracias por contactarnos! Nos pondremos en contacto contigo pronto.');
-            contactForm.reset();
-        });
-    }
+    // Manejo del formulario con Email.js
+    document.getElementById('contactForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        
+        // Mostrar indicador de carga
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = 'Enviando...';
+        submitBtn.disabled = true;
+        
+        // Preparar parámetros para Email.js
+        const templateParams = {
+            nombre: document.getElementById('nombre').value,
+            empresa: document.getElementById('empresa').value,
+            email: document.getElementById('email').value,
+            telefono: document.getElementById('telefono').value,
+            mensaje: document.getElementById('mensaje').value
+        };
+        
+        // Enviar formulario con Email.js
+        // Reemplaza "TU_SERVICE_ID" y "TU_TEMPLATE_ID" con tus IDs de Email.js
+        emailjs.send('service_rzqb3vh', 'template_mithqlh', templateParams)
+            .then(function(response) {
+                console.log('SUCCESS!', response.status, response.text);
+                document.getElementById('form-status').innerHTML = 
+                    '<div class="alert alert-success">¡Mensaje enviado correctamente! Nos pondremos en contacto contigo pronto.</div>';
+                document.getElementById('contactForm').reset();
+            }, function(error) {
+                console.log('FAILED...', error);
+                document.getElementById('form-status').innerHTML = 
+                    '<div class="alert alert-error">Error al enviar el mensaje. Por favor intenta nuevamente.</div>';
+            })
+            .finally(function() {
+                // Restaurar el botón
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            });
+    });
     
     // Smooth scrolling for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
