@@ -2372,4 +2372,42 @@ body {
 img, video, iframe {
     max-width: 100%;
     height: auto;
-}
+}        /* Mejoras específicas para los botones en hero-actions */
+        .hero .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+            position: relative;
+            z-index: 5; /* Asegurar que estén por encima de otros elementos */
+        }
+
+        .hero .btn-primary {
+            background-color: var(--primary);
+            color: var(--white);
+            border: 2px solid var(--white); /* Borde blanco para que sea visible */
+            padding: 0.75rem 1.5rem;
+            text-shadow: none; /* Eliminar posible sombra heredada */
+            font-weight: 600;
+        }
+
+        .hero .btn-primary:hover {
+            background-color: var(--white);
+            color: var(--primary);
+            border-color: var(--white);
+            transform: translateY(-2px);
+        }
+
+        .hero .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--white); /* Borde blanco para contraste */
+            color: var(--white); /* Texto blanco para visibilidad */
+            padding: 0.75rem 1.5rem;
+            text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3); /* Sombra para mejor legibilidad */
+        }
+
+        .hero .btn-outline:hover {
+            background-color: var(--white);
+            color: var(--primary);
+            text-shadow: none;
+        }
