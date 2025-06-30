@@ -48,6 +48,15 @@ document.addEventListener('DOMContentLoaded', function() {
             document.body.classList.remove('menu-open');
         });
     });
+
+    // Close mobile menu when clicking buttons that go to contact section
+    document.querySelectorAll('a[href*="#contacto"], a[href*="index.html#contacto"]').forEach(function(link) {
+        link.addEventListener('click', function() {
+            menuToggle.classList.remove('active');
+            mobileMenu.classList.remove('active');
+            document.body.classList.remove('menu-open');
+        });
+    });
     
     // Back to top button
     backToTopBtn.addEventListener('click', function() {
@@ -115,12 +124,141 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     });
     
-    // Smooth scrolling for anchor links
+    // Validación del formulario de contacto
+    document.getElementById('contactForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        
+        // Obtener referencias a los campos
+        const nombre = document.getElementById('nombre');
+        const empresa = document.getElementById('empresa');
+        const email = document.getElementById('email');
+        const telefono = document.getElementById('telefono');
+        const mensaje = document.getElementById('mensaje');
+        const formStatus = document.getElementById('form-status');
+        
+        // Limpiar mensajes de error previos
+        formStatus.innerHTML = '';
+        resetErrorStyles();
+        
+        // Validar campos
+        let isValid = true;
+        
+        // Validar nombre (no vacío y solo letras)
+        if (!nombre.value.trim()) {
+            showError(nombre, 'Por favor ingresa tu nombre completo');
+            isValid = false;
+        } else if (!/^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+$/.test(nombre.value.trim())) {
+            showError(nombre, 'El nombre debe contener solo letras');
+            isValid = false;
+        }
+        
+        // Validar empresa (no vacío)
+        if (!empresa.value.trim()) {
+            showError(empresa, 'Por favor ingresa el nombre de tu empresa');
+            isValid = false;
+        }
+        
+        // Validar email (formato correcto)
+        if (!email.value.trim()) {
+            showError(email, 'Por favor ingresa tu correo electrónico');
+            isValid = false;
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) {
+            showError(email, 'Por favor ingresa un correo electrónico válido');
+            isValid = false;
+        }
+        
+        // Validar teléfono (10 dígitos)
+        if (!telefono.value.trim()) {
+            showError(telefono, 'Por favor ingresa tu número de teléfono');
+            isValid = false;
+        } else if (!/^\d{10}$/.test(telefono.value.replace(/\D/g, ''))) {
+            showError(telefono, 'Por favor ingresa un número de 10 dígitos');
+            isValid = false;
+        }
+        
+        // Validar mensaje (no vacío y longitud mínima)
+        if (!mensaje.value.trim()) {
+            showError(mensaje, 'Por favor ingresa tu mensaje');
+            isValid = false;
+        } else if (mensaje.value.trim().length < 10) {
+            showError(mensaje, 'El mensaje debe tener al menos 10 caracteres');
+            isValid = false;
+        }
+        
+        // Si todo es válido, enviar el formulario
+        if (isValid) {
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Enviando...';
+            submitBtn.disabled = true;
+            
+            // Preparar parámetros para Email.js
+            const templateParams = {
+                nombre: nombre.value,
+                empresa: empresa.value,
+                email: email.value,
+                telefono: telefono.value,
+                mensaje: mensaje.value
+            };
+            
+            // Enviar formulario con Email.js
+            emailjs.send('service_g53vht9', 'template_sabht9r', templateParams)
+                .then(function(response) {
+                    console.log('SUCCESS!', response.status, response.text);
+                    formStatus.innerHTML = 
+                        '<div class="alert alert-success">¡Mensaje enviado correctamente! Nos pondremos en contacto contigo pronto.</div>';
+                    document.getElementById('contactForm').reset();
+                }, function(error) {
+                    console.log('FAILED...', error);
+                    formStatus.innerHTML = 
+                        '<div class="alert alert-error">Error al enviar el mensaje. Por favor intenta nuevamente.</div>';
+                })
+                .finally(function() {
+                    // Restaurar el botón
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                });
+        }
+        
+        // Función para mostrar mensajes de error
+        function showError(input, message) {
+            // Crear elemento para el mensaje de error
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.textContent = message;
+            
+            // Agregar clase de error al input
+            input.classList.add('error');
+            
+            // Insertar el mensaje después del input
+            input.parentNode.appendChild(errorDiv);
+            
+            // Enfocar el primer campo con error
+            if (isValid) {
+                input.focus();
+            }
+        }
+        
+        // Función para limpiar estilos de error
+        function resetErrorStyles() {
+            document.querySelectorAll('.error').forEach(el => el.classList.remove('error'));
+            document.querySelectorAll('.error-message').forEach(el => el.remove());
+        }
+    });
+    
+    // Smooth scrolling for anchor links (solo para la misma página)
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            
+            // Solo interceptar si es un anchor de la misma página (no contiene .html)
+            if (href.includes('.html')) {
+                return; // Permitir navegación normal entre páginas
+            }
+            
             e.preventDefault();
             
-            const targetId = this.getAttribute('href');
+            const targetId = href;
             if (targetId === '#') return;
             
             const targetElement = document.querySelector(targetId);
